@@ -66,24 +66,50 @@ h1 {
 }
 
 #deck .card.open {
-    transform: rotateY(0);
+    transform: rotateY(180);
     background: #02b3e4;
     cursor: default;
 }
 
-#deck .card.show {
-    font-size: 33px;
+@-webkit-keyframes rotate{
+    from { -webkit-transform: rotate(0deg);
+            height:150px;
+            width:150px;
+        }
+    to{ -webkit-transform: rotate(360deg);
+            height:125px;
+            width:125px;
+        }
 }
 
+#deck .card.show {
+    font-size: 33px;
+    -webkit-animation: rotate 0.4s ;
+}
+
+@-webkit-keyframes shake{
+     from {-webkit-transform: rotate(-30deg);
+            height:150px;
+            width:150px;
+        }
+    to{
+           -webkit-transform: rotate(30de);
+           height: 125px;
+           width:125px;
+    }       
+}
 #deck .card.wrong{
     background:red;
+    -webkit-animation: shake 0.5;
 }
 #deck .card.match {
     cursor: default;
     background: #02ccba;
     font-size: 33px;
 }
-
+#deck .card:hover{
+    box-shadow:0 0 10px white;
+}
 /*
  * Styles for the Score Panel
  */
@@ -110,3 +136,4 @@ h1 {
     float: right;
     cursor: pointer;
 }
+
