@@ -1,7 +1,6 @@
-/*
- * Create a list that holds all of your cards
- */
-
+// List that holds all of your cards
+let cards = document.getElementsByClassName('card');
+//console.log(cards);
 
 /*
  * Display the cards on the page
@@ -11,19 +10,21 @@
  */
 
 // Shuffle function from http://stackoverflow.com/a/2450976
+
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
-
     while (currentIndex !== 0) {
         randomIndex = Math.floor(Math.random() * currentIndex);
         currentIndex -= 1;
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
+        temporaryValue = array[currentIndex].innerHTML;
+        array[currentIndex].innerHTML = array[randomIndex].innerHTML;
+        array[randomIndex].innerHTML = temporaryValue;
     }
-
+    console.log(array)
     return array;
+    //SWAPPING OF THE INNER CONTENT IS ALLOWED BUT SWAPPING FULL HTML ELEMENT IS NOT ALLOWED!
 }
+shuffle(cards)
 
 
 /*
