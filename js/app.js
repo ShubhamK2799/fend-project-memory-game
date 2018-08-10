@@ -2,6 +2,11 @@
 let deck = document.getElementById('deck')
 let cards = document.getElementsByClassName('card')
 let selected =0
+let moves = 5;
+let movesBox = document.getElementById('moves')
+let textBox = document.getElementById('text')
+let commentBox=document.getElementById('comment')
+let restartButton = document.getElementsByClassName('restart')
 console.log(deck,cards)
 
 /*
@@ -54,6 +59,10 @@ function secondCard(target){
         selected=0;
     }
     else{
+        if(moves==0){
+            gameOver();
+            return;
+        }
         selected.className=target.className='wrong show open card'
         setTimeout(() => {
             target.className='card'
@@ -62,9 +71,26 @@ function secondCard(target){
             selected=0;
         }, 1000);
         console.log("Incorrect match")
+        moves--;
+        updateScore()
     }
 }
 
+function updateScore(){
+    movesBox.innerText=moves;
+}
+function gameOver(){
+    commentBox.style.display='block'
+    textBox.innerText='Game Over! Better Luck Next Time'
+}
+
+
+restartButton[0].addEventListener('click',function(){
+        location.reload(true)
+})
+restartButton[1].addEventListener('click',function(){
+    location.reload(true)
+})
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
