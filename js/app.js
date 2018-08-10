@@ -1,6 +1,8 @@
-// List that holds all of your cards
-let cards = document.getElementsByClassName('card');
-//console.log(cards);
+//Pick Up Deck and Cards 
+let deck = document.getElementById('deck')
+let cards = document.getElementsByClassName('card')
+let selected =0
+console.log(deck,cards)
 
 /*
  * Display the cards on the page
@@ -26,6 +28,45 @@ function shuffle(array) {
 }
 shuffle(cards)
 
+deck.addEventListener('click',function(event){
+    target = event.target
+    if (target.className.includes('match'))
+        return
+    if(selected!=0)
+        secondCard(target)              
+    else
+        firstCard(target)    
+})
+
+function firstCard(target){
+    console.log(target,selected)
+    console.log('1st card selected')
+    target.className = 'card open show'   
+    selected=target
+}
+
+function secondCard(target){
+    console.log('2nd card selected')
+    if(selected.innerHTML==target.innerHTML && selected!==target){
+        console.log(target,selected)
+        target.className= selected.className= 'card match show'
+        console.log("Now Correctly matched!")
+        selected=0;
+    }
+    else{
+        selected.className=target.className='wrong show open card'
+        setTimeout(() => {
+            target.className='card'
+            selected.className='card'
+            console.log(target,selected)
+            selected=0;
+        }, 1000);
+        console.log("Incorrect match")
+    }
+}
+
+function match(target, selected){
+}
 
 /*
  * set up the event listener for a card. If a card is clicked:
