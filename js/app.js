@@ -3,9 +3,10 @@ let deck = document.getElementById('deck')
 let cards = document.getElementsByClassName('card')
 let selected =0
 let moves = 5;
+let matched =0 ;
 let stars =document.getElementById('stars')
-let shakeAnimation =  'shake 0.82s cubic-bezier(.36,.07,.19,.97) both'
-let rotateAnimation = 'rotate 0.4s'
+let shakeAnimation =  'shake 0.3s cubic-bezier(.36,.07,.19,.97) both'
+let rotateAnimation = 'rotate 0.3s'
 let cardBackground = '#2e3d49'
 let movesBox = document.getElementById('moves')
 let textBox = document.getElementById('text')
@@ -38,8 +39,6 @@ function addEvents(){
 }
 function whenClicked(event){
     target = event.target
-    if (target.className.includes('match'))
-        return    
     if(selected!=0)
         secondCard(target)              
     else{
@@ -64,6 +63,11 @@ function secondCard(target){
     console.log('2nd card selected')
     if(selected.innerHTML==target.innerHTML){
         target.className=selected.className='card show match'
+        selected.removeEventListener('click',whenClicked)
+        target.removeEventListener('click',whenClicked)
+        matched++;
+        if(matched==8)
+            winText()
         selected=0;
         rotate(target)
         console.log("Now Correctly matched!")
@@ -82,8 +86,8 @@ function secondCard(target){
                 target.className='card'
                 selected.className='card'
                 selected=0;
-            }, 820);
-        },400);
+            }, 300);
+        },300);
         console.log("Incorrect match")
         moves--;
         updateScore()
@@ -107,9 +111,13 @@ function updateScore(){
     movesBox.innerText=moves
     stars.children[moves].remove()
 }
+function winText(){
+    commentBox.style.display='block'
+    textBox.innerHTML='Congratulation! You Won!<p>Do you want to play again?</p>'
+}
 function gameOver(){
     commentBox.style.display='block'
-    textBox.innerText='Game Over! Better Luck Next Time'
+    textBox.innerText='Game Over! Do you want to try again?'
     for(var i=0; i<cards.length;i++)
         cards[i].removeEventListener('click',whenClicked)
 }
