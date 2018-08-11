@@ -3,6 +3,10 @@ let deck = document.getElementById('deck')
 let cards = document.getElementsByClassName('card')
 let selected =0
 let moves = 5;
+let stars =document.getElementById('stars')
+let shakeAnimation =  'shake 0.82s cubic-bezier(.36,.07,.19,.97) both'
+let rotateAnimation = 'rotate 0.4s'
+let cardBackground = '#2e3d49'
 let movesBox = document.getElementById('moves')
 let textBox = document.getElementById('text')
 let commentBox=document.getElementById('comment')
@@ -36,13 +40,15 @@ function shuffle(array) {
 //cards.forEach(function (element){ its not an array
 //cards[i].addEventListener('click',whenClicked(i))
 
-for(var i=0; i<cards.length;i++)
-    cards[i].addEventListener('click',whenClicked) // just a function name, pass no parameters otherwise it will be run at the time it is added
-
+function addEvents(){
+    for(var i=0; i<cards.length;i++)
+        cards[i].addEventListener('click',whenClicked) 
+    // just a function name, pass no parameters otherwise it will be run at the time it is added
+}
 function whenClicked(event){
     target = event.target
     if (target.className.includes('match'))
-        return
+        return    
     if(selected!=0)
         secondCard(target)              
     else{
@@ -54,43 +60,61 @@ function whenClicked(event){
 function firstCard(target){
     // console.log(target,selected)
     console.log('1st card selected')
-    target.className = 'card open show'   
+    target.className = 'card open show'
 }
 
 function secondCard(target){
-    // same selection
     if(target.className.includes('open')){
         target.className = 'card'
+        console.log('same selection')
         selected=0;
         return
     }
     console.log('2nd card selected')
     if(selected.innerHTML==target.innerHTML){
-        console.log(target,selected)
         target.className=selected.className='card show match'
         selected=0;
-        // console.log("Now Correctly matched!")
+        rotate(target)
+        console.log("Now Correctly matched!")
     }
     else{
         if(moves==0){
             gameOver();
             return;
         }
-        selected.className=target.className='wrong show open card'
-        setTimeout(() => {
-            target.className='card'
-            selected.className='card'
-            console.log(target,selected)
-            selected=0;
-        }, 1000);
+        selected.className=target.className='show open card'
+        setTimeout(()=>{
+            console.log('started shaking')
+            target.classList.add('wrong')
+            selected.classList.add('wrong')
+            setTimeout(() => {
+                target.className='card'
+                selected.className='card'
+                selected=0;
+            }, 820);
+        },400);
         console.log("Incorrect match")
         moves--;
         updateScore()
     }
 }
 
+function shake(target){
+    selected.style.animation= 'none'
+    target.style.animation= 'none'    
+    selected.style.animation= shakeAnimation
+    target.style.animation= shakeAnimation        
+    selected.style.background='red'
+    target.style.background='red'
+}
+function rotate(target){
+    target.style.animation= 'none'    
+    target.style.animation= rotateAnimation        
+}
+
 function updateScore(){
-    movesBox.innerText=moves;
+    movesBox.innerText=moves
+    stars.children[moves].remove()
 }
 function gameOver(){
     commentBox.style.display='block'
@@ -108,7 +132,7 @@ location.reload(true)
 
 //Run all the functions
 shuffle(cards)
-// addEvents(cards)
+addEvents(cards)
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
