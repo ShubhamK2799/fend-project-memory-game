@@ -31,26 +31,34 @@ function shuffle(array) {
     return array;
     //SWAPPING OF THE INNER CONTENT IS ALLOWED BUT SWAPPING FULL HTML ELEMENT IS NOT ALLOWED!
 }
-shuffle(cards)
 
-deck.addEventListener('click',function(event){
+//Event delegations will not work
+//cards.forEach(function (element){ its not an array
+//cards[i].addEventListener('click',whenClicked(i))
+
+for(var i=0; i<cards.length;i++)
+    cards[i].addEventListener('click',whenClicked) // just a function name, pass no parameters otherwise it will be run at the time it is added
+
+function whenClicked(event){
     target = event.target
     if (target.className.includes('match'))
         return
     if(selected!=0)
         secondCard(target)              
-    else
-        firstCard(target)    
-})
+    else{
+        firstCard(target)
+        selected=target
+    }    
+}
 
 function firstCard(target){
-    console.log(target,selected)
+    // console.log(target,selected)
     console.log('1st card selected')
     target.className = 'card open show'   
-    selected=target
 }
 
 function secondCard(target){
+    // same selection
     if(target.className.includes('open')){
         target.className = 'card'
         selected=0;
@@ -59,9 +67,9 @@ function secondCard(target){
     console.log('2nd card selected')
     if(selected.innerHTML==target.innerHTML){
         console.log(target,selected)
-        target.className= selected.className= 'card match show'
-        console.log("Now Correctly matched!")
+        target.className=selected.className='card show match'
         selected=0;
+        // console.log("Now Correctly matched!")
     }
     else{
         if(moves==0){
@@ -87,15 +95,20 @@ function updateScore(){
 function gameOver(){
     commentBox.style.display='block'
     textBox.innerText='Game Over! Better Luck Next Time'
+    for(var i=0; i<cards.length;i++)
+        cards[i].removeEventListener('click',whenClicked)
 }
 
-
 restartButton[0].addEventListener('click',function(){
-        location.reload(true)
-})
-restartButton[1].addEventListener('click',function(){
     location.reload(true)
 })
+restartButton[1].addEventListener('click',function(){
+location.reload(true)
+})
+
+//Run all the functions
+shuffle(cards)
+// addEvents(cards)
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)

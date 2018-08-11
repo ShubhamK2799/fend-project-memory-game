@@ -71,37 +71,11 @@ h1 {
     cursor: default;
 }
 
-@-webkit-keyframes rotate{
-    from { -webkit-transform: rotate(0deg);
-            height:150px;
-            width:150px;
-        }
-    to{ -webkit-transform: rotate(360deg);
-            height:125px;
-            width:125px;
-        }
-}
 
 #deck .card.show {
     font-size: 33px;
-    -webkit-animation: rotate 0.4s ;
 }
 
-@-webkit-keyframes shake{
-     from {-webkit-transform: rotate(-30deg);
-            height:150px;
-            width:150px;
-        }
-    to{
-           -webkit-transform: rotate(30de);
-           height: 125px;
-           width:125px;
-    }       
-}
-#deck .card.wrong{
-    background:red;
-    -webkit-animation: shake 0.5;
-}
 #deck .card.match {
     cursor: default;
     background: #02ccba;
@@ -160,4 +134,34 @@ h1 {
 p{
     padding:0;
     margin:0;
+}
+
+
+/* Animations*/
+@-webkit-keyframes rotate{
+    from { -webkit-transform: rotate(0deg);
+            height:150px;
+            width:150px;
+        }
+    to{ -webkit-transform: rotate(360deg);
+            height:125px;
+            width:125px;
+        }
+}
+@-webkit-keyframes shake{
+    from {-webkit-transform: rotate(-30deg);
+           height:150px;
+           width:150px;
+       }
+   to{
+          -webkit-transform: rotate(30de);
+          height: 125px;
+          width:125px;
+   }       
+}
+.rotate{
+    -webkit-animation: rotate 0.4s;
+}
+.shake{
+    -webkit-animation: shake 0.4s;
 }
