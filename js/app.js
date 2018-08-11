@@ -1,19 +1,27 @@
-//Pick Up Deck and Cards 
-let deck = document.getElementById('deck')
-let cards = document.getElementsByClassName('card')
-let selected =0
-let moves = 5;
-let matched =0 ;
-let stars =document.getElementById('stars')
-let shakeAnimation =  'shake 0.3s cubic-bezier(.36,.07,.19,.97) both'
-let rotateAnimation = 'rotate 0.3s'
-let cardBackground = '#2e3d49'
-let movesBox = document.getElementById('moves')
-let textBox = document.getElementById('text')
-let commentBox=document.getElementById('comment')
-let restartButton = document.getElementsByClassName('restart')
-console.log(deck,cards)
+//HTML Elements
+let cards = document.getElementsByClassName('card');
+let deck = document.getElementById('deck');
+let starBox =document.getElementById('stars');
+let minBox =document.getElementById('mins');
+let secBox =document.getElementById('secs');
+let movesBox = document.getElementById('moves');
+let textBox = document.getElementById('text');
+let commentBox=document.getElementById('comment');
+let restartButton = document.getElementsByClassName('restart');
+//Variables
+let rotateAnimation = 'rotate 0.3s';
+let cardBackground = '#2e3d49';
+let selected =0;
+let moves = 0;
+let matched =0;
+let starRating = 5;
+//Timer variables
+let timer =-1;
+let startingTime = 0;
+let totalMins=0;
+let totalSecs=0;
 
+//Shuffling the cards
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
     while (currentIndex !== 0) {
@@ -23,112 +31,116 @@ function shuffle(array) {
         array[currentIndex].innerHTML = array[randomIndex].innerHTML;
         array[randomIndex].innerHTML = temporaryValue;
     }
-    console.log(array)
+    // console.log(array);
     return array;
-    //SWAPPING OF THE INNER CONTENT IS ALLOWED BUT SWAPPING FULL HTML ELEMENT IS NOT ALLOWED!
 }
 
-//Event delegations will not work
-//cards.forEach(function (element){ its not an array
-//cards[i].addEventListener('click',whenClicked(i))
-
+//Adding event to each card individually
 function addEvents(){
     for(var i=0; i<cards.length;i++)
-        cards[i].addEventListener('click',whenClicked) 
-    // just a function name, pass no parameters otherwise it will be run at the time it is added
+        cards[i].addEventListener('click',whenClicked);
 }
+
 function whenClicked(event){
-    target = event.target
+   if (timer ==-1){
+        startingTime =(new Date).getTime();
+        timer = setInterval(function() {
+            let now = (new Date).getTime();
+            let delta = now-startingTime;
+            // console.log(delta);
+            totalMins = Math.floor(delta/(1000*60));
+            totalSecs = Math.floor((delta%(60*1000))/1000); 
+            minBox.innerHTML =totalMins;
+            secBox.innerHTML =totalSecs;
+        }, 1000);
+    }
+
+    target = event.target;
     if(selected!=0)
-        secondCard(target)              
+        secondCard(target);              
     else{
-        firstCard(target)
-        selected=target
+        firstCard(target);
+        selected=target;
     }    
 }
 
 function firstCard(target){
     // console.log(target,selected)
-    console.log('1st card selected')
-    target.className = 'card open show'
+    // console.log('1st card selected')
+    target.className = 'card open show';
 }
 
 function secondCard(target){
+    updateScore();
     if(target.className.includes('open')){
-        target.className = 'card'
-        console.log('same selection')
+        target.className = 'card';
+        // console.log('same selection')
         selected=0;
-        return
+    return
     }
-    console.log('2nd card selected')
+    // console.log('2nd card selected');
     if(selected.innerHTML==target.innerHTML){
-        target.className=selected.className='card show match'
-        selected.removeEventListener('click',whenClicked)
-        target.removeEventListener('click',whenClicked)
+        target.className=selected.className='card show match';
+        selected.removeEventListener('click',whenClicked);
+        target.removeEventListener('click',whenClicked);
         matched++;
         if(matched==8)
-            winText()
+            winText();
         selected=0;
-        rotate(target)
-        console.log("Now Correctly matched!")
+        rotate(target);
+        console.log("Now Correctly matched!");
     }
     else{
-        if(moves==0){
-            gameOver();
-            return;
-        }
-        selected.className=target.className='show open card'
+        selected.className=target.className='show open card';
         setTimeout(()=>{
-            console.log('started shaking')
-            target.classList.add('wrong')
-            selected.classList.add('wrong')
+            console.log('started shaking');
+            target.classList.add('wrong');
+            selected.classList.add('wrong');
             setTimeout(() => {
-                target.className='card'
-                selected.className='card'
+                target.className='card';
+                selected.className='card';
                 selected=0;
             }, 300);
         },300);
-        console.log("Incorrect match")
+        // console.log("Incorrect match");
         moves--;
-        updateScore()
     }
 }
 
-function shake(target){
-    selected.style.animation= 'none'
-    target.style.animation= 'none'    
-    selected.style.animation= shakeAnimation
-    target.style.animation= shakeAnimation        
-    selected.style.background='red'
-    target.style.background='red'
-}
 function rotate(target){
-    target.style.animation= 'none'    
-    target.style.animation= rotateAnimation        
+    target.style.animation= 'none';    
+    target.style.animation= rotateAnimation;        
 }
 
 function updateScore(){
-    movesBox.innerText=moves
-    stars.children[moves].remove()
+    moves++;
+    movesBox.innerText=moves;
+    switch(moves){
+        case 2: starBox.children[4].remove(); starRating--;break;
+        case 4: starBox.children[3].remove(); starRating--;break;
+        case 6: starBox.children[2].remove(); starRating--;break;
+        case 8: starBox.children[1].remove(); starRating--;
+    }
 }
 function winText(){
-    commentBox.style.display='block'
-    textBox.innerHTML='Congratulation! You Won!<p>Do you want to play again?</p>'
-}
-function gameOver(){
-    commentBox.style.display='block'
-    textBox.innerText='Game Over! Do you want to try again?'
-    for(var i=0; i<cards.length;i++)
-        cards[i].removeEventListener('click',whenClicked)
+    commentBox.style.display='block';
+    clearInterval(timer);
+    textBox.innerHTML
+        =`<p>Congratulation! You Did it!</p>
+        <p>Moves :${moves}</p>
+        <p>Star  :${starRating}</p>
+        <p>Time  :${totalMins}m ${totalSecs}s</p>
+        </p>Do you want to play again?</p>`;
 }
 
 restartButton[0].addEventListener('click',function(){
-    location.reload(true)
+    location.reload(true);
 })
+
 restartButton[1].addEventListener('click',function(){
-location.reload(true)
+    location.reload(true);
 })
 
 //Run all the functions
-shuffle(cards)
-addEvents(cards)
+shuffle(cards);
+addEvents(cards);
