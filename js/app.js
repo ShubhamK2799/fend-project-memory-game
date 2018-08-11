@@ -51,8 +51,13 @@ function firstCard(target){
 }
 
 function secondCard(target){
+    if(target.className.includes('open')){
+        target.className = 'card'
+        selected=0;
+        return
+    }
     console.log('2nd card selected')
-    if(selected.innerHTML==target.innerHTML && selected!==target){
+    if(selected.innerHTML==target.innerHTML){
         console.log(target,selected)
         target.className= selected.className= 'card match show'
         console.log("Now Correctly matched!")
