@@ -9,9 +9,10 @@ let textBox = document.getElementById('text');
 let commentBox=document.getElementById('comment');
 let restartButton = document.getElementsByClassName('restart');
 //Variables
-let rotateAnimation = 'rotate 0.3s';
+// let rotateAnimation = 'rotate 0.3s';
 let cardBackground = '#2e3d49';
-let selected =0;
+let selected =[];
+let pairedCard=0;
 let moves = 0;
 let matched =0;
 let starRating = 5;
@@ -23,7 +24,7 @@ let totalSecs=0;
 
 //Shuffling the cards
 function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
+    let currentIndex = array.length, temporaryValue, randomIndex;
     while (currentIndex !== 0) {
         randomIndex = Math.floor(Math.random() * currentIndex);
         currentIndex -= 1;
@@ -37,7 +38,7 @@ function shuffle(array) {
 
 //Adding event to each card individually
 function addEvents(){
-    for(var i=0; i<cards.length;i++)
+    for(let i=0; i<cards.length;i++)
         cards[i].addEventListener('click',whenClicked);
 }
 
@@ -56,77 +57,92 @@ function whenClicked(event){
     }
 
     target = event.target;
-    if(selected!=0)
-        secondCard(target);              
-    else{
+    // rotate(target);
+    if(selected.length%2==0)
         firstCard(target);
-        selected=target;
-    }    
+    else
+        secondCard(target);              
+    console.log(selected)    
+}
+
+
+function getIndex(target){
+    for (let i=0;i<selected.length;i++)
+        if(selected[i].innerHTML==target.innerHTML)
+            return i;
+    return -1;        
 }
 
 function firstCard(target){
+    updateScore();
     // console.log(target,selected)
     // console.log('1st card selected')
     target.className = 'card open show';
+    selected.push(target);
 }
 
+
 function secondCard(target){
-    updateScore();
     if(target.className.includes('open')){
         target.className = 'card';
-        // console.log('same selection')
-        selected=0;
-    return
+        // rotate(target);
+        console.log('same selection')
+        selected.splice(getIndex(target),1);
+        return
     }
-    // console.log('2nd card selected');
-    if(selected.innerHTML==target.innerHTML){
-        target.className=selected.className='card show match';
-        selected.removeEventListener('click',whenClicked);
+    console.log('2nd card selected');
+    updateScore();
+
+    let i = getIndex(target);
+    pairedCard = selected[i];
+    
+    if(pairedCard!=-1){
+        console.log(pairedCard)
+        console.log("Now Correctly matched!");
+        target.className=pairedCard.className='card show match';
+        pairedCard.removeEventListener('click',whenClicked);
         target.removeEventListener('click',whenClicked);
         matched++;
         if(matched==8)
             winText();
-        selected=0;
-        rotate(target);
-        console.log("Now Correctly matched!");
+        selected.splice();
+        pairedCard=-1;
     }
     else{
-        selected.className=target.className='show open card';
+        pairedCard=selected[selected.length-1];
+        console.log(pairedCard)
+        pairedCard.className=target.className='show open card';
         setTimeout(()=>{
-            console.log('started shaking');
+            console.log('Wrong Selection, started shaking');
             target.classList.add('wrong');
-            selected.classList.add('wrong');
+            pairedCard.classList.add('wrong');
             setTimeout(() => {
                 target.className='card';
-                selected.className='card';
-                selected=0;
+                pairedCard.className='card';
+                selected.pop(pairedCard);
             }, 300);
-        },300);
-        // console.log("Incorrect match");
-        moves--;
+        },500);
     }
 }
-
-function rotate(target){
-    target.style.animation= 'none';    
-    target.style.animation= rotateAnimation;        
-}
+// function rotate(target){
+//     target.style.animation= 'none';    
+//     target.style.animation= rotateAnimation;        
+// }
 
 function updateScore(){
     moves++;
     movesBox.innerText=moves;
-    switch(moves){
-        case 2: starBox.children[4].remove(); starRating--;break;
-        case 4: starBox.children[3].remove(); starRating--;break;
-        case 6: starBox.children[2].remove(); starRating--;break;
-        case 8: starBox.children[1].remove(); starRating--;
+    if( moves <9 && moves%2==0){
+        starBox.children[0].remove(); 
+        starRating--;
+        // console.log(moves)
     }
 }
 function winText(){
     commentBox.style.display='block';
     clearInterval(timer);
     textBox.innerHTML
-        =`<p>Congratulation! You Did it!</p>
+        =`<p>Congratulations! You Did it!</p>
         <p>Moves :${moves}</p>
         <p>Star  :${starRating}</p>
         <p>Time  :${totalMins}m ${totalSecs}s</p>
