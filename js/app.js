@@ -92,14 +92,16 @@ function secondCard(target){
     }
     else{
         selected.className=target.className='show open card';
+        let referenceToSelected = selected;
+        selected = 0;
         setTimeout(()=>{
             console.log('started shaking');
             target.classList.add('wrong');
-            selected.classList.add('wrong');
+            referenceToSelected.classList.add('wrong');
             setTimeout(() => {
                 target.className='card';
-                selected.className='card';
-                selected=0;
+                referenceToSelected.className='card';
+                referenceToSelected=0;
             }, 300);
         },300);
         // console.log("Incorrect match");
@@ -115,11 +117,8 @@ function rotate(target){
 function updateScore(){
     moves++;
     movesBox.innerText=moves;
-    switch(moves){
-        case 2: starBox.children[4].remove(); starRating--;break;
-        case 4: starBox.children[3].remove(); starRating--;break;
-        case 6: starBox.children[2].remove(); starRating--;break;
-        case 8: starBox.children[1].remove(); starRating--;
+    if (moves <9 && moves%2==0){
+        starBox.children[0].remove(); starRating--;
     }
 }
 function winText(){
