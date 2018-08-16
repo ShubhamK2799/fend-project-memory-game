@@ -31,6 +31,7 @@ body {
 h1 {
     font-family: 'Open Sans', sans-serif;
     font-weight: 300;
+    margin:15px 0 ;
 }
 
 /*
@@ -137,8 +138,23 @@ p{
     padding:0;
     margin:0;
 }
-
-
+button{
+    border: none;
+    padding:1vw;
+    width:400px;
+    margin-top:-4px;
+    margin-bottom:4px;
+    border-radius: 5px;
+    font-size: inherit;
+    color:white;
+    background: rgb(143, 184, 223);
+}
+#hint p{
+    display: block;
+}
+button:hover{
+    background: rgb(93, 115, 161);
+}
 /* Animations*/
 @keyframes rotate{
     0% { -webkit-transform: rotate(0deg);
@@ -152,21 +168,18 @@ p{
 }
 
 @keyframes shake {
-    10%, 90% {
+    10%,90% {
       transform: translate3d(-1px, 0, 0);
     }
     
-    20%, 80% {
-      transform: translate3d(2px, 0, 0);
+    30%,70% {
+      transform: translate3d(7px, 0, 0);
     }
   
-    30%, 50%, 70% {
-      transform: translate3d(-4px, 0, 0);
+    50%{
+      transform: translate3d(-10px, 0, 0);
     }
-  
-    40%, 60% {
-      transform: translate3d(4px, 0, 0);
-    }
+
   }
 @keyframes popup {
     0% {

@@ -8,7 +8,7 @@ let movesBox = document.getElementById('moves');
 let textBox = document.getElementById('text');
 let commentBox=document.getElementById('comment');
 let restartButton = document.getElementsByClassName('restart');
-let aniList=[];
+let hintsActive =false;
 //Variables
 let cardBackground = '#2e3d49';
 let selected =0;
@@ -54,7 +54,9 @@ function whenClicked(event){
             secBox.innerHTML =totalSecs;
         }, 1000);
     }
-    
+
+    if(hintsActive) return;
+
     target = event.target;
     if(target.children.length==0) //means target is the icon not the list element
     target =target.parentElement
@@ -89,10 +91,7 @@ function secondCard(target){
         console.log("Now Correctly matched!");
     }
     else{
-        wrongAttempts++;
-        if (wrongAttempts<9 && wrongAttempts%2==0){
-            starBox.children[0].remove(); starRating--;
-        }
+        aWrongAttempt()
         refToSelected.className=target.className='card wrong';
         setTimeout(()=>{target.className=refToSelected.className='card'},300)
         console.log('Wrong Selection');
@@ -123,7 +122,40 @@ restartButton[0].addEventListener('click',function(){
 restartButton[1].addEventListener('click',function(){
     location.reload(true);
 })
+function aWrongAttempt(){
+    wrongAttempts++;
+    if (wrongAttempts<9 && wrongAttempts%2==0){
+        starBox.children[0].remove(); starRating--;
+    }
+}
 
+function hint(){
+    if(timer==-1){ 
+        alert('You must start the game in order to use Hint!')
+        return;
+    }
+    console.log('hints active')
+    aWrongAttempt();
+    aWrongAttempt();
+    aWrongAttempt();
+    updateScore();
+    updateScore();
+    updateScore();
+    hintsActive=true;
+    for (let i=0; i<cards.length;i++){
+        if(!cards[i].className.includes('match'))
+            cards[i].classList.add('open');   
+    }
+    setTimeout(()=>{
+        for (let i=0; i<cards.length;i++){
+            if(selected!==cards[i])
+                cards[i].classList.remove('open');   
+        }
+        console.log('hints disabled')
+        hintsActive=false; 
+    },1500)    
+
+}
 //Run all the functions
 shuffle(cards);
 addEvents(cards);
