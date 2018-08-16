@@ -15,6 +15,7 @@ let selected =0;
 let moves = 0;
 let matched =0;
 let starRating = 5;
+let wrongAttempts=0;
 //Timer variables
 let timer =-1;
 let startingTime = 0;
@@ -55,6 +56,9 @@ function whenClicked(event){
     }
 
     target = event.target;
+    //console.log(target.children.length)
+    if(target.children.length==0) //means target is the icon not the list element
+        target =target.parentElement
     if(selected!=0)
         secondCard(target);              
     else{
@@ -64,7 +68,6 @@ function whenClicked(event){
 }
 
 function firstCard(target){
-    // console.log(target,selected)
     // console.log('1st card selected')
     target.className = 'card open show';
     updateScore();
