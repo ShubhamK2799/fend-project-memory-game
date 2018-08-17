@@ -71,18 +71,18 @@ function firstCard(target){
     target.className = 'card open';
     target.removeEventListener('click',whenClicked);
     selected=target;
-    console.log('1st card selected','event listner removed from',selected)
+    // console.log('1st card selected','event listner removed from',selected)
 }
 
 function secondCard(target){
     target.removeEventListener('click',whenClicked);
-    console.log('2nd card selected','event listner removed from ',selected);
+    // console.log('2nd card selected','event listner removed from ',selected);
     if(selected.innerHTML==target.innerHTML){
         matched++;
         if(matched==8)
         winText();
         selected.className=target.className='card match';
-        console.log("Now Correctly matched!");
+        // console.log("Now Correctly matched!");
     }
     else{
         aWrongAttempt()
@@ -91,11 +91,11 @@ function secondCard(target){
         let refToSelected=selected;
         setTimeout(()=>{
             refToTarget.className=refToSelected.className='card';
-            console.log('1st card selected','event listner added on',refToTarget,refToSelected)
+            // console.log('1st card selected','event listner added on',refToTarget,refToSelected)
             refToSelected.addEventListener('click',whenClicked);
             refToTarget.addEventListener('click',whenClicked);
         },300)
-        console.log('Wrong Selection');
+        // console.log('Wrong Selection');
     }
     selected=0;
     updateScore();
