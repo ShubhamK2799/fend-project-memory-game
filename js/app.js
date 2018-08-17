@@ -65,38 +65,39 @@ function whenClicked(event){
     if(target.children.length==0) //make sure target is the icon not the list element
         target =target.parentElement
     selected!==0?secondCard(target):firstCard(target);
-    console.log(selected)
 }
 
 function firstCard(target){
-    // console.log('1st card selected')
     target.className = 'card open';
+    target.removeEventListener('click',whenClicked);
     selected=target;
+    console.log('1st card selected','event listner removed from',selected)
 }
 
 function secondCard(target){
-    if(target.className.includes('open')){
-        // console.log('same selection')
-        return
-    }
-    let refToSelected=selected;
-    selected=0;
-    console.log('2nd card selected');
-    if(refToSelected.innerHTML==target.innerHTML){
-        refToSelected.removeEventListener('click',whenClicked);
-        target.removeEventListener('click',whenClicked);
+    target.removeEventListener('click',whenClicked);
+    console.log('2nd card selected','event listner removed from ',selected);
+    if(selected.innerHTML==target.innerHTML){
         matched++;
         if(matched==8)
-            winText();
-        refToSelected.className=target.className='card match';
+        winText();
+        selected.className=target.className='card match';
         console.log("Now Correctly matched!");
     }
     else{
         aWrongAttempt()
-        refToSelected.className=target.className='card wrong';
-        setTimeout(()=>{target.className=refToSelected.className='card'},300)
+        selected.className=target.className='card wrong';
+        let refToTarget=target;
+        let refToSelected=selected;
+        setTimeout(()=>{
+            refToTarget.className=refToSelected.className='card';
+            console.log('1st card selected','event listner added on',refToTarget,refToSelected)
+            refToSelected.addEventListener('click',whenClicked);
+            refToTarget.addEventListener('click',whenClicked);
+        },300)
         console.log('Wrong Selection');
     }
+    selected=0;
     updateScore();
 }
 
@@ -155,8 +156,6 @@ function hint(){
     },1500)    
 
 }
-
-
 
 
 //Run all the functions
