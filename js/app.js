@@ -21,6 +21,12 @@ let timer =-1;
 let startingTime = 0;
 let totalMins=0;
 let totalSecs=0;
+
+
+
+
+
+
 //Shuffling the cards
 function shuffle(array) {
     let currentIndex = array.length, temporaryValue, randomIndex;
@@ -31,7 +37,6 @@ function shuffle(array) {
         array[currentIndex].innerHTML = array[randomIndex].innerHTML;
         array[randomIndex].innerHTML = temporaryValue;
     }
-    // console.log(array);
     return array;
 }
 
@@ -47,7 +52,6 @@ function whenClicked(event){
         timer = setInterval(function() {
             let now = (new Date).getTime();
             let delta = now-startingTime;
-            // console.log(delta);
             totalMins = Math.floor(delta/(1000*60));
             totalSecs = Math.floor((delta%(60*1000))/1000); 
             minBox.innerHTML =totalMins;
@@ -58,12 +62,9 @@ function whenClicked(event){
     if(hintsActive) return;
 
     target = event.target;
-    if(target.children.length==0) //means target is the icon not the list element
-    target =target.parentElement
-    if(selected!==0)
-        secondCard(target);              
-    else
-        firstCard(target);
+    if(target.children.length==0) //make sure target is the icon not the list element
+        target =target.parentElement
+    selected!==0?secondCard(target):firstCard(target);
     console.log(selected)
 }
 
@@ -75,7 +76,7 @@ function firstCard(target){
 
 function secondCard(target){
     if(target.className.includes('open')){
-        console.log('same selection')
+        // console.log('same selection')
         return
     }
     let refToSelected=selected;
@@ -134,14 +135,12 @@ function hint(){
         alert('You must start the game in order to use Hint!')
         return;
     }
-    console.log('hints active')
-    aWrongAttempt();
-    aWrongAttempt();
-    aWrongAttempt();
-    updateScore();
-    updateScore();
-    updateScore();
+    // console.log('hints active')
     hintsActive=true;
+    for (let i=0; i<3;i++){
+        aWrongAttempt();
+        updateScore();
+    }
     for (let i=0; i<cards.length;i++){
         if(!cards[i].className.includes('match'))
             cards[i].classList.add('open');   
@@ -156,6 +155,10 @@ function hint(){
     },1500)    
 
 }
+
+
+
+
 //Run all the functions
 shuffle(cards);
 addEvents(cards);
